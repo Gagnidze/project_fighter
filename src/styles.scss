@@ -1,1 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+body {
+    background: url('https://cdn.hipwallpaper.com/i/32/3/hKjXAt.jpg') no-repeat fixed;
+    background-size: cover;
+}
+
+// .small-heading {
+//     font-size: 2rem;
+// }
+
+.line {
+    width: 80%;
+    background-color: red;
+    height: 1px;
+    margin: 12px 0;
+}
+
+.small-heading {
+    font-size: 1.4em;
+    border-bottom: 1px solid red;
+    color: rgba(#fff, .9);
+    font-weight: bold;
+    margin: 10px 0;
+}

@@ -1,0 +1,122 @@
+<div class="split-view">
+    <div class="split-container">
+        <h1>Add Fighter</h1>
+        <form [formGroup]="fighterForm" (ngSubmit)="submit()">
+            <div class="basic-data-container" formGroupName="basicData">
+                <label for="name">Name of the the fighter</label>
+                <input id="name" type="text" formControlName="name">
+                <span class="warning-message"
+                    *ngIf="fighterForm.get('basicData.name').invalid && fighterForm.get('basicData.name').touched">Name
+                    is
+                    required</span>
+                <!--  -->
+                <label for="surname">Surname of the fighter</label>
+                <input id="surname" type="text" formControlName="surname">
+                <span class="warning-message"
+                    *ngIf="fighterForm.get('basicData.surname').invalid && fighterForm.get('basicData.surname').touched">Surname
+                    is
+                    required</span>
+                <!--  -->
+                <label for="nickname">Nickname of the fighter</label>
+                <input id="nickname" type="text" formControlName="nickname">
+                <span class="warning-message"
+                    *ngIf="fighterForm.get('basicData.nickname').invalid && fighterForm.get('basicData.nickname').touched">Nickname
+                    is
+                    required</span>
+
+                <!--  -->
+                <!--  -->
+                <label for="img-url">Image URL</label>
+                <input id="img-url" type="url" formControlName="imageURL">
+                <span class="warning-message"
+                    *ngIf="fighterForm.get('basicData.imageURL').invalid && fighterForm.get('basicData.imageURL').touched">Image
+                    is
+                    required</span>
+            </div>
+
+            <br>
+            <hr>
+            <br>
+            <!-- BODY DATA START -->
+            <div class="body-data-container" formGroupName="bodyData">
+
+                <div class="body-data">
+                    <label for="weight">Weight in KG</label>
+                    <input id="weight" type="number" formControlName="weight">
+                    <span class="warning-message"
+                        *ngIf="fighterForm.get('bodyData.weight').invalid && fighterForm.get('bodyData.weight').touched">Weight
+                        is
+                        required</span>
+                </div>
+
+                <div class="body-data">
+                    <label for="height">Height in CM</label>
+                    <input id="height" type="number" formControlName="height">
+                    <span class="warning-message"
+                        *ngIf="fighterForm.get('bodyData.height').invalid && fighterForm.get('bodyData.height').touched">Height
+                        is
+                        required</span>
+                </div>
+
+                <div class="body-data">
+                    <label for="reach">Reach in CM</label>
+                    <input id="reach" type="number" formControlName="reach">
+                    <span class="warning-message"
+                        *ngIf="fighterForm.get('bodyData.reach').invalid && fighterForm.get('bodyData.reach').touched">Reach
+                        is
+                        required</span>
+                </div>
+
+                <div class="body-data">
+                    <label for="age">Age</label>
+                    <input id="age" type="number" formControlName="age">
+                    <span class="warning-message"
+                        *ngIf="fighterForm.get('bodyData.age').invalid && fighterForm.get('bodyData.age').touched">Age
+                        is
+                        required</span>
+                </div>
+
+            </div>
+            <br>
+            <hr>
+            <br>
+            <!--  -->
+            <div class="record-container" formGroupName="record">
+                <div class="record-data">
+                    <label for="wins">Wins</label>
+                    <input id="wins" type="text" formControlName="wins">
+                </div>
+
+                <div class="record-data">
+                    <label for="loses">Loses</label>
+                    <input id="loses" type="text" formControlName="loses">
+                </div>
+                <div class="record-data">
+                    <label for="draw">Draws</label>
+                    <input id="draw" type="text" formControlName="draw">
+                </div>
+            </div>
+            <span class="warning-message"
+                *ngIf="(fighterForm.get('record.wins') || fighterForm.get('record.loses') || fighterForm.get('record.draw')).invalid && (fighterForm.get('record.wins') && fighterForm.get('record.loses') && fighterForm.get('record.draw')).touched">Whole
+                record is required</span>
+            <!--  -->
+            <br>
+            <hr>
+            <br>
+            <!--  -->
+            <label for="desc">Say something about this fighter</label>
+            <textarea id="desc" rows="5" formControlName="desc"></textarea>
+            <span class="warning-message"
+                *ngIf="fighterForm.get('desc').invalid && fighterForm.get('desc').touched">Description
+                required</span>
+            <!--  -->
+            <button [disabled]="!fighterForm.valid" class="form-submit-btn" type="submit">Add Your Fighter !</button>
+            <span class="warning" *ngIf='fighterForm.invalid'>All the input fields are
+                required</span>
+        </form>
+    </div>
+    <div class="split-container">
+        <h1>Fighter Card Preview</h1>
+        <app-fighter-card [liveData]="liveData"></app-fighter-card>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="card">
+    <div class="introduction">
+        <img [src]="liveData?.basicData.imageURL" alt="">
+        <span class="small-heading" *ngIf="liveData"> {{liveData.basicData.name}}
+            "{{liveData.basicData.nickname |
+            uppercase}}"
+            {{liveData.basicData.surname}}
+        </span>
+    </div>
+    <div class="stats">
+        <span>{{liveData?.bodyData.age}} Year old fighter</span>
+        <span>Standing {{liveData?.bodyData.height}} Centimeters Tall</span>
+        <span>Weighing in {{liveData?.bodyData.weight}} Kilograms</span>
+        <span>Reach of {{liveData?.bodyData.reach}} cm</span>
+    </div>
+    <!-- <br> -->
+    <div class="line"></div>
+    <!-- <br> -->
+    <div class="stats">
+        <span class="small-heading">
+            Professional Record
+        </span>
+        <div class="record">
+            <span class="record-stat">{{liveData?.record.wins}} WINS</span>
+            <span class="record-stat">{{liveData?.record.loses}} LOSES</span>
+            <span class="record-stat">{{liveData?.record.draw}} DRAWS</span>
+        </div>
+    </div>
+    <div class="desc stats">
+        <span class="small-heading">Fighter Description</span>
+        <span class="description">
+            {{liveData?.desc}}
+        </span>
+    </div>
+</div>
