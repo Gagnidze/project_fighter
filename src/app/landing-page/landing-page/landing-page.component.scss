@@ -1,0 +1,130 @@
+// FOR FUTURE UPDATE
+
+// @mixin basic-container-styles {
+//     display: flex;
+//         flex-direction: row;
+//         // position: absolute;
+//         width: 100%;
+//         box-shadow: 0px 0px 15px 15px #000000cc;
+//         border-bottom: 2px solid white;
+// }
+
+// .background {
+//     background: rgba(0, 0, 0, 0.904);
+//     display: flex;
+//     flex-direction: column;
+//     // need to change before deployment
+//     // height: 1000px;
+//     // need to change before deployment
+
+
+    
+//     .main-header-container {
+//         // border: 1px solid rgb(145, 7, 7);
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         padding: 10px 10px 30px 10px;
+//         margin-top: 20px;
+
+//         .glove-img {
+//             // border: 2px solid rgb(207, 205, 205);
+//             width: 100px;
+//         }
+
+//     }
+//     .heading-text {
+//         color: rgb(247, 244, 244);
+//         // border: 1px solid white;
+//         align-self: center;
+//         font-size: 32px;
+//         font-weight: 900;
+//     }
+
+
+//     .hall-of-fame {
+//         // display: flex;
+//         // flex-direction: row;
+//         // border: 5px solid green;
+//         display: flex;
+//         justify-content: space-around;
+//         // flex-direction: row;
+//         // justify-content: flex-end;
+
+//         .HOF-card {
+//             // border: 4px solid red;
+//             // display: flex;
+
+//             // flex-direction: row;
+//             // justify-content: center;
+//             // align-items: center;
+//             // margin: auto;
+//             width: 28%;
+//             // height: 200px;
+//             // border: 10px solid white;
+//         }
+//     }
+
+//     .intro-section-container {
+//         @include basic-container-styles();
+
+//         img {
+//             width: 50%;
+//         }
+
+//         .text-box {
+//             font-size: 20px;
+//             padding: 20px 80px;
+//             background: rgba(0, 0, 0, 0.8);
+
+//             .intro-text {
+//                 color: white;
+//             }
+//         }
+
+//     }
+
+//     .description-section-container {
+//         @include basic-container-styles();
+//         flex-direction: row-reverse;
+
+//         img {
+//             width: 50%
+//         }
+
+//         .text-box {
+//             font-size: 20px;
+//             padding: 20px 80px;
+//             background: rgba(0, 0, 0, 0.8);
+
+//             .intro-text {
+//                 color: white;
+//             }
+//         }
+//     }
+
+//     .texts-container{
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//         justify-content: space-evenly;
+//     }
+
+//     .join-button {
+//         padding: 10px 80px;
+//         margin-bottom: 10px;
+//         font-size: 17px;
+//         background: rgba(155, 37, 37, 0.89);
+//         color: white;
+//         outline: none;
+//         border: 1px solid rgba(255, 255, 255, 0.356);
+//         box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.8);
+//         font-weight: 600;
+//         cursor: pointer;
+        
+//         &:hover {
+//             background: rgba(75, 6, 6, 0.89);
+//         }
+//     }
+
+// }

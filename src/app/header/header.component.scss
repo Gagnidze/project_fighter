@@ -18,3 +18,38 @@
 .active {
     background-color: rgba(#fff, .2);
 }
+
+.profile {
+    position: fixed;
+    top: 8px;
+    left: 25px;
+    border-radius: 10px;
+    background: rgba($color: #000000, $alpha: .4);
+
+    .icon {
+        margin: 6px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+    }
+}
+
+.language-box {
+    position: fixed;
+    bottom: 25px;
+    left: 27px;
+    display: flex;
+    flex-direction: column;
+    background:  #000000;
+    padding: 10px;
+    border-radius: 10px;
+    .language{
+        color: white;
+        cursor: pointer;
+        text-align: center;
+
+        &:hover {
+            font-weight: bold;
+        }
+    }
+}

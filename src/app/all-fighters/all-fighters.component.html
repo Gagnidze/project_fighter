@@ -1,4 +1,34 @@
+<div class="secondary-header">
+    <div class="total-info-box">
+        <h4 class="total-info-text">{{"Total"|translate}} {{totalFighters}} {{"fighters by"|translate}}
+            {{totalContributors}} {{"users"|translate}}
+        </h4>
+    </div>
+    <div *ngIf="!loggedIn" class="non-authenticated-message-box">
+        <span class="non-authenticated-message">
+            {{"Log in to unlock filtering"|translate}}
+        </span>
+        <span class="non-authenticated-message">
+            {{"Log in to edit and delete fighters added by you"|translate}}
+        </span>
+    </div>
+    <div *ngIf="loggedIn" class="sort-container">
+        <div class="filter-options">
+            <span (click)="showAll()" style="cursor: pointer;"
+                class="sort-text default-button">{{"Reset"|translate}}</span>
+            <span class="sort-text">{{"Filter by Author:"|translate}}</span>
+        </div>
+        <div class="contributors-container">
+            <div (click)="disableEdit()" routerLinkActive="active-user" [routerLink]='[contributor]'
+                [queryParams]="{lock: true}" *ngFor="let contributor of contributorsArr;" class="contributor">
+                {{contributor}}
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="all-fighter-container">
-    <app-fighter-card class="fighter-card" *ngFor="let fighter of loadedFighters;let i = index" [liveData]="fighter">
+    <app-fighter-card [eligibleToEdit]="eligibleToEdit" class="fighter-card"
+        *ngFor="let fighter of loadedFighters;let i = index" [id]="i" [liveData]="fighter">
     </app-fighter-card>
 </div>

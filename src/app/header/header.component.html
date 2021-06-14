@@ -1,4 +1,15 @@
 <div class="header">
-    <div routerLinkActive="active" routerLink="/add-fighter" class="navbtn"> Add Fighter</div>
-    <div routerLinkActive="active" routerLink="/all-fighters" class="navbtn"> All Fighters</div>
+    <div *ngIf="userLoggedIn" routerLinkActive="active" routerLink="/add-fighter" class="navbtn"> {{'Add Fighter' |
+        translate}}</div>
+    <div routerLinkActive="active" routerLink="/all-fighters" class="navbtn"> {{'All Fighters' | translate}}</div>
+</div>
+
+<div class="profile">
+    <div *ngIf="!userLoggedIn" (click)="toggleSignup()" class="icon">{{'Log In / Register' | translate}}</div>
+    <div *ngIf="userLoggedIn" (click)="logout()" class="icon">{{'Log Out' | translate}}</div>
+</div>
+
+<div class="language-box">
+    <span (click)="changeLanguage($event.target)" value="en" class="language">eng</span>
+    <span (click)="changeLanguage($event.target)" value="geo" class="language">geo</span>
 </div>

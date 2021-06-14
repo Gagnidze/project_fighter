@@ -32,3 +32,40 @@ body {
     font-weight: bold;
     margin: 10px 0;
 }
+
+.form-submit-btn {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: white;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 2px;
+    cursor: pointer;
+    width: 150px;
+    align-self: center;
+
+    &:active {
+        background-color: #999;
+    }
+}
+
+.small-btn {
+    padding: 3px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover {
+        background: #a8a8a8;
+    }
+}
+
+.error-box {
+    margin-top: 40px;
+    padding: 8px 13px;
+    border: 1px solid rgb(182, 85, 85);
+    color: rgb(255, 0, 0);
+    border-radius: 2px;
+    background: rgba($color: rgb(173, 156, 156), $alpha: .2);
+}
