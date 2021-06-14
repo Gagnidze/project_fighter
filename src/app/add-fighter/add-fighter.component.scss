@@ -50,22 +50,6 @@ form {
     color: red;
 }
 
-.form-submit-btn {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: white;
-    outline: none;
-    border: 1px solid black;
-    border-radius: 2px;
-    cursor: pointer;
-    width: 150px;
-    align-self: center;
-
-    &:active {
-        background-color: #999;
-    }
-}
-
 .warning {
     color: red;
     align-self: center;

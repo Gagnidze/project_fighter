@@ -1,21 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { FormDataService } from '../formData.service';
-import { BackendService } from '../shared/backend.service';
+import * as mainStore from '../store/app.reducer'
+import { SaveFighters } from '../all-fighters/store/fighters.actions';
+import * as fightersActions from '../all-fighters/store/fighters.actions'
+import { Fighter } from '../shared/models/fighter.model';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-add-fighter',
   templateUrl: './add-fighter.component.html',
   styleUrls: ['./add-fighter.component.scss']
 })
-export class AddFighterComponent implements OnInit {
+export class AddFighterComponent implements OnInit, OnDestroy {
 
-  liveData: FormData;
+  liveData: FormData | Fighter;
   fighterForm: FormGroup;
+  userMail: string = '';
 
-  constructor(private formDataService: FormDataService, private backend: BackendService) { }
+  fighterSub: Subscription;
+  authSub: Subscription;
+  valuesSub: Subscription;
+  notificationSub: Subscription;
+
+  @Input() editMode: boolean = false;
+
+  editId: number;
+  fighterToEdit: Fighter;
+
+  constructor(
+    private formDataService: FormDataService,
+    private store: Store<mainStore.AppState>,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.store.dispatch(new fightersActions.GetFighters());
 
     this.fighterForm = new FormGroup({
       'basicData': new FormGroup({
@@ -35,10 +58,12 @@ export class AddFighterComponent implements OnInit {
         'loses': new FormControl('', Validators.required),
         'draw': new FormControl('', Validators.required)
       }, Validators.required),
-      'desc': new FormControl('', Validators.required)
+      'desc': new FormControl('', Validators.required,),
+      'id': new FormControl(''),
+      'userMail': new FormControl('')
     })
 
-    this.fighterForm.valueChanges.subscribe(
+    this.valuesSub = this.fighterForm.valueChanges.subscribe(
       (data: FormData) => {
         this.formDataService.notification.next(
           data
@@ -46,16 +71,60 @@ export class AddFighterComponent implements OnInit {
       }
     )
 
-    this.formDataService.notification.subscribe(
+    this.notificationSub = this.formDataService.notification.subscribe(
       (data: FormData) => {
         this.liveData = data;
+      }
+    )
+
+
+    this.authSub = this.store.select('auth')
+      .subscribe(
+        (res) => {
+          if (res.user) {
+            this.userMail = res.user.email;
+            console.log(this.userMail);
+          }
+        }
+      );
+
+    this.fighterSub = this.store.select('fighters').subscribe(
+      (res) => {
+        if (res.editId > -1) {
+          this.editMode = true;
+          this.fighterForm.setValue(res.fighterToEdit);
+        }
       }
     )
   }
 
   submit() {
-    this.formDataService.allFighters.push(this.fighterForm.value);
-    this.backend.saveFighters();
+    console.log(this.userMail);
+    this.store.dispatch(new fightersActions.AddFighters(this.fighterForm.value, this.userMail));
+
+    this.store.dispatch(new SaveFighters);
+
     this.fighterForm.reset();
+    // this.router.navigate(['all-fighters']);
+  }
+
+  update() {
+    this.store.select('fighters').subscribe(
+      (res) => {
+        this.editId = res.editId
+      }
+    )
+    this.store.dispatch(new fightersActions.EditFighters(this.editId, this.fighterForm.value));
+    this.store.dispatch(new fightersActions.SaveFighters());
+    this.store.dispatch(new fightersActions.EndEdit());
+    this.fighterForm.reset();
+    // this.router.navigate(['all-fighters']);
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
+    this.fighterSub.unsubscribe();
+    this.valuesSub.unsubscribe();
+    this.notificationSub.unsubscribe();
   }
 }

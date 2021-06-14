@@ -1,0 +1,40 @@
+<div class="background">
+
+    <div *ngIf="loading">
+        <app-loading-spinner></app-loading-spinner>
+    </div>
+
+    <div *ngIf="error" class="error-box">
+        <span>{{error}}</span>
+    </div>
+
+    <form (ngSubmit)="submitSignupForm()" [formGroup]="signupForm" *ngIf="signupMode && !loading" class="form">
+
+
+
+
+        <div class="control">
+            <label for="email">{{"Your Email"|translate}}</label>
+            <input formControlName="email" id="email" type="email">
+        </div>
+        <div class="control">
+            <label for="repeatPassword">{{"Password"|translate}}</label>
+            <input formControlName="Password" id="repeatPassword" type="password">
+        </div>
+        <button class="small-btn" type="submit">{{"Sign Up"|translate}}</button>
+        <span (click)="modeSwitcher()" class="question">{{"Allready have an account?"|translate}}</span>
+    </form>
+
+    <form (ngSubmit)="submitLoginForm()" [formGroup]="loginForm" class="form" *ngIf="!signupMode && !loading">
+        <div class="control">
+            <label for="login-email">{{"Email"|translate}}</label>
+            <input formControlName="email" id="login-email" type="email">
+        </div>
+        <div class="control">
+            <label for="login-password">{{"Password"|translate}}</label>
+            <input formControlName="password" id="login-password" type="password">
+        </div>
+        <button class="small-btn" type="submit">{{"Log In"|translate}}</button>
+        <span (click)="modeSwitcher()" class="question">{{"Dont have an account?"|translate}}</span>
+    </form>
+</div>
