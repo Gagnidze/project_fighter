@@ -50,11 +50,10 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   submitSignupForm() {
     this.loading = true;
-
     this.store.dispatch(
       new SignupStart({
         email: this.signupForm.value.email,
-        password: this.signupForm.value.repeatPassword
+        password: this.signupForm.value.Password
       })
     )
 

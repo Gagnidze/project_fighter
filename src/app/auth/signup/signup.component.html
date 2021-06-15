@@ -9,17 +9,13 @@
     </div>
 
     <form (ngSubmit)="submitSignupForm()" [formGroup]="signupForm" *ngIf="signupMode && !loading" class="form">
-
-
-
-
         <div class="control">
             <label for="email">{{"Your Email"|translate}}</label>
             <input formControlName="email" id="email" type="email">
         </div>
         <div class="control">
             <label for="repeatPassword">{{"Password"|translate}}</label>
-            <input formControlName="Password" id="repeatPassword" type="password">
+            <input formControlName="Password" id="Password" type="password">
         </div>
         <button class="small-btn" type="submit">{{"Sign Up"|translate}}</button>
         <span (click)="modeSwitcher()" class="question">{{"Allready have an account?"|translate}}</span>
