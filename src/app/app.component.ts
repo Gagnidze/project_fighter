@@ -25,9 +25,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Get fighters ASAP
-    this.store.dispatch(new GetFighters());
+    this.store.dispatch(GetFighters());
     // calling this here, oninit so as soon as app is initialised, we log in if it is possible
-    this.store.dispatch(new AutoLogin());
+    this.store.dispatch(AutoLogin());
     // this.store.select('auth').subscribe(
     //   (authState) => {
     //     console.log('update')

@@ -23,6 +23,7 @@ import { FighterEffects } from './all-fighters/store/fighters.effects';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { classificationEffects } from './header/store/classifications.effects';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/", ".json")
@@ -45,7 +46,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     StoreModule.forRoot(mainStore.appReducer),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
-    EffectsModule.forRoot([AuthEffects, FighterEffects]),
+    EffectsModule.forRoot([AuthEffects, FighterEffects, classificationEffects]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

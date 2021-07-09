@@ -51,13 +51,18 @@ export class FighterCardComponent implements OnInit, OnDestroy {
         this.fighterToEdit = res.allFighters[this.id];
       }
     )
-    this.store.dispatch(new fightersActions.StartEdit(this.fighterToEdit, this.id));
-    this.router.navigate(['add-fighter']);
+    this.store.dispatch(fightersActions.StartEdit({
+      payload: {
+        fighterToEdit: this.fighterToEdit,
+        editId: this.id
+      }
+    }));
+    // this.router.navigate(['add-fighter']);
   }
 
   delete() {
-    this.store.dispatch(new fightersActions.DeleteFighters(this.id));
-    this.store.dispatch(new fightersActions.SaveFighters());
+    this.store.dispatch(fightersActions.DeleteFighters({ payload: this.id }));
+    this.store.dispatch(fightersActions.SaveFighters());
   }
 
   ngOnDestroy() {

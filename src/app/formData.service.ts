@@ -7,19 +7,4 @@ import { Fighter } from "./shared/models/fighter.model";
 export class FormDataService {
     notification = new Subject<FormData>();
     refreshFighters = new Subject<Fighter[]>();
-
-    // allFighters: Fighter[] = [];
-
-    // updateFighters(data) {
-    // this.allFighters = [];
-    // data.forEach(el => {
-    //     if (el !== null) {
-    //         this.allFighters.push(el);
-    //     }
-    // });
-
-    // this.refreshFighters.next(this.allFighters)
-    // }
-
-
 }

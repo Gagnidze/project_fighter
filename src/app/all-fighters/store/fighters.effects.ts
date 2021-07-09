@@ -1,55 +1,71 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Actions, Effect, ofType } from '@ngrx/effects'
+import { Actions, createEffect, Effect, ofType } from '@ngrx/effects'
 import { Store } from '@ngrx/store'
-import { map, switchMap, withLatestFrom } from 'rxjs/operators'
-import { Fighter } from 'src/app/shared/models/fighter.model'
+import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import * as FightersActions from './fighters.actions'
 import * as mainStore from '../../store/app.reducer'
+import { Router } from '@angular/router'
+import { dataRequests } from '../dataRequests.service'
 
 @Injectable()
 
 export class FighterEffects {
-    @Effect()
-    getFighters = this.actions$.pipe(
-        ofType(FightersActions.GET_FIGHTERS),
-        switchMap(
-            () => {
-                return this.backend.get<Fighter[]>('https://ng-project-fighter-default-rtdb.firebaseio.com/fighters.json')
-            }
-        ), map(
-            (res) => {
-                const filteredArr = []
-                res.forEach(
-                    (el) => {
-                        if (el !== null) {
-                            filteredArr.push(el);
-                        }
+
+    getFighters = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(FightersActions.GET_FIGHTERS),
+                switchMap(
+                    () => {
+                        return this.requests.sendGetReq();
+                    }
+                ), map(
+                    (res) => {
+                        const filteredArr = []
+                        res.forEach(
+                            (el) => {
+                                if (el !== null) {
+                                    filteredArr.push(el);
+                                }
+                            }
+                        )
+                        return FightersActions.SetFighters({ payload: filteredArr });
                     }
                 )
-                return new FightersActions.SetFighters(filteredArr);
-            }
-        )
+            )
     )
 
-    @Effect({ dispatch: false })
-    saveFighters = this.actions$.pipe(
-        ofType(FightersActions.SAVE_FIGHTERS),
-        withLatestFrom(
-            this.store.select('fighters'),
-            this.store.select('auth')),
-        switchMap(
-            ([someNeverResponseIDoNotNeedBro, fighterState, authState]) => {
-                return this.backend.put('https://ng-project-fighter-default-rtdb.firebaseio.com/fighters.json?auth=' + authState.user.getToken, fighterState.allFighters)
-            }
-        )
+    saveFighters = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(FightersActions.SAVE_FIGHTERS),
+                withLatestFrom(
+                    this.store.select('fighters'),
+                    this.store.select('auth')),
+                switchMap(
+                    ([someNeverResponseIDoNotNeedBro, fighterState, authState]) => {
+                        return this.requests.sentEditReq(authState.user.getToken, fighterState.allFighters)
+                    }
+                )
+            ), { dispatch: false }
+    )
+
+    editFighter = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(FightersActions.START_EDIT),
+                tap(() => {
+                    this.router.navigate(['add-fighter']);
+                })
+            ), { dispatch: false }
     )
 
 
     constructor(
         private actions$: Actions,
-        private backend: HttpClient,
-        private store: Store<mainStore.AppState>
+        private store: Store<mainStore.AppState>,
+        private router: Router,
+        private requests: dataRequests
     ) {
     }
 }

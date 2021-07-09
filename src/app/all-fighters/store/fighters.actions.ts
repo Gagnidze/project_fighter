@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store'
+import { Action, createAction, props } from '@ngrx/store'
 import { Fighter } from 'src/app/shared/models/fighter.model'
 
 export const SET_FIGHTERS = '[Fighters] Set Fighters'
@@ -12,67 +12,67 @@ export const SET_ID = '[Fighters] Set Id'
 export const START_EDIT = '[Fighters] Start Edit'
 export const END_EDIT = '[Fighters] End Edit'
 
-export class StartEdit implements Action {
-    readonly type = START_EDIT
 
-    constructor(
-        public fighterToEdit: Fighter,
-        public editId: number
-    ) { }
-}
+export const StartEdit = createAction(
+    START_EDIT,
+    props<{
+        payload: {
+            fighterToEdit: Fighter,
+            editId: number
+        }
+    }>()
+)
 
-export class SetFighters implements Action {
-    readonly type = SET_FIGHTERS
+export const SetFighters = createAction(
+    SET_FIGHTERS,
+    props<{
+        payload: Fighter[]
+    }>()
+)
 
-    constructor(public payload: Fighter[]) { }
-}
+export const GetFighters = createAction(
+    GET_FIGHTERS
+)
 
-export class GetFighters implements Action {
-    readonly type = GET_FIGHTERS
-}
-
-export class AddFighters implements Action {
-    readonly type = ADD_FIGHTERS
-
-    // editing this 
-    constructor(public payload: Fighter, public userMail: string) { }
-}
-
-export class EditFighters implements Action {
-    readonly type = EDIT_FIGHTERS
-
-    constructor(public index: number, public updatedFighter: Fighter) { }
-}
-
-export class DeleteFighters implements Action {
-    readonly type = DELETE_FIGHTERS
-
-    constructor(public payload: number) { }
-}
-export class SaveFighters implements Action {
-    readonly type = SAVE_FIGHTERS
-}
-
-export class SelectFighters implements Action {
-    readonly type = SELECT_FIGHTERS;
-
-    constructor(public payload: string) { }
-}
-
-export class EndEdit implements Action {
-    readonly type = END_EDIT
-}
+export const AddFighters = createAction(
+    ADD_FIGHTERS,
+    props<{
+        payload: {
+            payload: Fighter,
+            userMail: string
+        }
+    }>()
+)
 
 
+export const EditFighters = createAction(
+    EDIT_FIGHTERS,
+    props<{
+        payload: {
+            index: number,
+            updatedFighter: Fighter
+        }
+    }>()
+)
 
+export const DeleteFighters = createAction(
+    DELETE_FIGHTERS,
+    props<{
+        payload: number
+    }>()
+)
 
-export type FightersActions =
-    | SetFighters
-    | GetFighters
-    | AddFighters
-    | EditFighters
-    | DeleteFighters
-    | SaveFighters
-    | SelectFighters
-    | StartEdit
-    | EndEdit;
+export const SaveFighters = createAction(
+    SAVE_FIGHTERS
+)
+
+export const SelectFighters = createAction(
+    SELECT_FIGHTERS,
+    props<{
+        payload: string
+    }>()
+)
+
+export const EndEdit = createAction(
+    END_EDIT
+)

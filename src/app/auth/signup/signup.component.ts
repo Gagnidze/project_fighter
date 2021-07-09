@@ -50,10 +50,14 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   submitSignupForm() {
     this.loading = true;
+    console.log(this.signupForm.value.email);
+    console.log(this.signupForm.value.Password);
     this.store.dispatch(
-      new SignupStart({
-        email: this.signupForm.value.email,
-        password: this.signupForm.value.Password
+      SignupStart({
+        payload: {
+          email: this.signupForm.value.email,
+          password: this.signupForm.value.Password
+        }
       })
     )
 
@@ -66,9 +70,11 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.loading = true;
     console.log(this.loginForm)
 
-    this.store.dispatch(new LoginStart({
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password
+    this.store.dispatch(LoginStart({
+      payload: {
+        email: this.loginForm.value.email,
+        password: this.loginForm.value.password
+      }
     }));
   }
 

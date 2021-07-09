@@ -1,4 +1,4 @@
-import { Action } from "@ngrx/store"
+import { Action, createAction, props } from "@ngrx/store"
 
 export const LOGIN_START = '[auth] Login Start';
 export const AUTH_FAIL = '[auth] Login Fail';
@@ -9,47 +9,39 @@ export const SIGNUP = '[Auth] Signup';
 export const AUTO_LOGIN = '[Auth] Auto Login';
 export const AUTO_LOGOUT = '[Auth] Auto Logout';
 
-export class Logout implements Action {
-    readonly type = LOGOUT;
-}
 
-export class LoginStart implements Action {
-    readonly type = LOGIN_START
 
-    constructor(public payload: { email: string, password: string }) { }
-}
+export const Logout = createAction(
+    LOGOUT
+)
 
-export class AuthSuccess implements Action {
-    readonly type = AUTH_SUCCESS;
+export const LoginStart = createAction(
+    LOGIN_START,
+    props<{ payload: { email: string, password: string } }>()
+)
 
-    constructor(public payload: {
-        email: string,
-        id: string,
-        token: string,
-        tokenExpDate: Date
-    }) { }
-}
+export const AuthSuccess = createAction(
+    AUTH_SUCCESS,
+    props<{
+        payload: {
+            email: string,
+            id: string,
+            token: string,
+            tokenExpDate: Date
+        }
+    }>()
+)
 
-export class AuthFail implements Action {
-    readonly type = AUTH_FAIL;
+export const AuthFail = createAction(
+    AUTH_FAIL,
+    props<{ payload: string }>()
+)
 
-    constructor(public payload: string) { };
-}
+export const SignupStart = createAction(
+    SINGUP_START,
+    props<{ payload: { email: string, password: string } }>()
+)
 
-export class SignupStart implements Action {
-    readonly type = SINGUP_START;
-
-    constructor(public payload: { email: string, password: string }) { }
-}
-
-export class AutoLogin implements Action {
-    readonly type = AUTO_LOGIN;
-}
-
-export type AuthActions =
-    | AuthSuccess
-    | Logout
-    | LoginStart
-    | AuthFail
-    | SignupStart
-    | AutoLogin;
+export const AutoLogin = createAction(
+    AUTO_LOGIN
+)

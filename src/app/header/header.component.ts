@@ -46,11 +46,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleSignup() {
-    this.router.navigate(['signup'])
+    // this.router.navigate(['signup'])
+    this.store.dispatch(classificationActions.navigate({ payload: 'signup' }));
   }
 
   logout() {
-    this.store.dispatch(new Logout())
+    this.store.dispatch(Logout())
     window.location.reload();
   }
 

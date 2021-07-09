@@ -1,3 +1,4 @@
+import { createReducer, on } from "@ngrx/store";
 import { User } from "src/app/shared/models/user.model";
 import * as AuthActions from './auth.actions'
 
@@ -15,42 +16,40 @@ const initState: StateHere = {
     sessionTime: null
 }
 
-export function authReducer(
-    state = initState,
-    action: AuthActions.AuthActions
-) {
-    switch (action.type) {
-        case AuthActions.AUTH_SUCCESS:
-            const user = new User(
-                action.payload.email,
-                action.payload.id,
-                action.payload.token,
-                action.payload.tokenExpDate);
-            return {
-                ...state,
-                user: user,
-                authError: null,
-                loading: false
-            };
-        case AuthActions.LOGOUT:
-            return {
-                ...state,
-                user: null
-            };
-        case AuthActions.LOGIN_START:
-            return {
-                ...state,
-                authError: null,
-                loading: true
-            };
-        case AuthActions.AUTH_FAIL:
-            return {
-                ...state,
-                user: null,
-                authError: action.payload,
-                loading: false
-            };
-        default:
-            return state;
-    }
-}
+export const authReducer = createReducer(
+    initState,
+    on(AuthActions.AuthSuccess, (state, action) => {
+        const user = new User(
+            action.payload.email,
+            action.payload.id,
+            action.payload.token,
+            action.payload.tokenExpDate);
+        return {
+            ...state,
+            user: user,
+            authError: null,
+            loading: false
+        }
+    }),
+    on(AuthActions.Logout, (state, action) => {
+        return {
+            ...state,
+            user: null
+        };
+    }),
+    on(AuthActions.LoginStart, (state, action) => {
+        return {
+            ...state,
+            authError: null,
+            loading: true
+        };
+    }),
+    on(AuthActions.AuthFail, (state, action) => {
+        return {
+            ...state,
+            user: null,
+            authError: action.payload,
+            loading: false
+        };
+    })
+)

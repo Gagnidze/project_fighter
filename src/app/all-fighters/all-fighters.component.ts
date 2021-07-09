@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { FormDataService } from '../formData.service';
 import { Fighter } from '../shared/models/fighter.model';
-// import * as allFightersReducer from '../add-fighter/store/all-fighters.reducer'
 import * as mainStore from '../store/app.reducer'
 import { GetFighters, SelectFighters } from './store/fighters.actions';
 import * as classificationActions from '../header/store/classification.actions'
@@ -49,13 +48,14 @@ export class AllFightersComponent implements OnInit, OnDestroy {
   }
 
   showAll() {
-    this.store.dispatch(new GetFighters())
+    this.store.dispatch(GetFighters())
     this.store.select('fighters').subscribe(
       (res) => {
         this.loadedFighters = res.allFighters
       }
     )
-    this.router.navigate(['all-fighters']);
+    // this.router.navigate(['all-fighters']);
+    this.store.dispatch(classificationActions.navigate({ payload: 'all-fighters' }));
   }
 
   ngOnInit(): void {
@@ -82,7 +82,7 @@ export class AllFightersComponent implements OnInit, OnDestroy {
       (res) => {
         this.totalFighters = res.allFighters.length;
 
-        this.store.dispatch(new classificationActions.setUsers(res.allFighters))
+        this.store.dispatch(classificationActions.setUsers({ payload: res.allFighters }))
 
         this.classSubSecond = this.store.select('classification').subscribe(
           (resClass) => {
@@ -97,7 +97,7 @@ export class AllFightersComponent implements OnInit, OnDestroy {
         if (routerRes instanceof RoutesRecognized) {
 
           this.id = routerRes.url.slice(14, [...routerRes.url].indexOf('?'));
-          this.store.dispatch(new SelectFighters(this.id));
+          this.store.dispatch(SelectFighters({ payload: this.id }));
 
           this.fighterSubSecond = this.store.select('fighters').subscribe(
             (res) => {

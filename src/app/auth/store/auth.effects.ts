@@ -1,11 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Router } from '@angular/router';
+import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { loginResponse, singupResponse } from 'src/app/shared/models/fighter.model';
 import { User } from 'src/app/shared/models/user.model';
+import { requestService } from 'src/app/auth/requests.service';
 import * as AuthActions from './auth.actions';
 
 const AuthUser = (
@@ -19,11 +18,13 @@ const AuthUser = (
     const userToStore: User = new User(email, localId, token, expirationDate);
     localStorage.setItem('user', JSON.stringify(userToStore));
 
-    return new AuthActions.AuthSuccess({
-        email: email,
-        id: localId,
-        token: token,
-        tokenExpDate: new Date(expirationDate),
+    return AuthActions.AuthSuccess({
+        payload: {
+            email: email,
+            id: localId,
+            token: token,
+            tokenExpDate: new Date(expirationDate)
+        },
     });
 };
 
@@ -52,122 +53,129 @@ const errorHandling = (err) => {
         default:
             errMsg = 'Task Failed Successfully !';
     }
-    return of(new AuthActions.AuthFail(errMsg));
+    return of(AuthActions.AuthFail({ payload: errMsg }));
 };
 
 @Injectable()
 
 export class AuthEffects {
-    @Effect({ dispatch: false })
-    authLogout = this.actions$.pipe(
-        ofType(AuthActions.LOGOUT), tap(
-            () => {
-                localStorage.removeItem('user');
-            }
-        )
+
+    authLogout = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(AuthActions.LOGOUT), tap(
+                    () => {
+                        localStorage.removeItem('user');
+                    }
+                )
+            ), { dispatch: false }
     )
 
+    autoLogin = createEffect(
+        () => this.actions$.pipe(
+            ofType(AuthActions.AUTO_LOGIN),
+            map(
+                () => {
+                    // getting user stored in local storage parsed if it is there
+                    const localUser: {
+                        email: string,
+                        id: string,
+                        token: string,
+                        tokenExpDate: Date
+                    } = JSON.parse(localStorage.getItem('user'));
+                    if (!localUser) {
+                        return { type: 'NOTHING' };
+                    }
 
-    @Effect()
-    autoLogin = this.actions$.pipe(
-        ofType(AuthActions.AUTO_LOGIN),
-        map(
-            () => {
-                // getting user stored in local storage parsed if it is there
-                const localUser: {
-                    email: string,
-                    id: string,
-                    token: string,
-                    tokenExpDate: Date
-                } = JSON.parse(localStorage.getItem('user'));
-                if (!localUser) {
+                    // creating new user instance from local storage
+                    const loadedUser: User = new User(
+                        localUser.email,
+                        localUser.id,
+                        localUser.token,
+                        new Date(localUser.tokenExpDate)
+                    );
+
+                    // If user has a valid token, we log the user in.
+                    if (localUser.token) {
+                        return (AuthActions.AuthSuccess(
+                            {
+                                payload: {
+                                    email: loadedUser.email,
+                                    id: loadedUser.id,
+                                    token: loadedUser.getToken,
+                                    tokenExpDate: new Date(localUser.tokenExpDate)
+                                }
+                            }
+                        ))
+                    }
                     return { type: 'NOTHING' };
                 }
-
-                // creating new user instance from local storage
-                const loadedUser: User = new User(
-                    localUser.email,
-                    localUser.id,
-                    localUser.token,
-                    new Date(localUser.tokenExpDate)
-                );
-
-                // If user has a valid token, we log the user in.
-                if (localUser.token) {
-                    return (new AuthActions.AuthSuccess(
-                        {
-                            email: loadedUser.email,
-                            id: loadedUser.id,
-                            token: loadedUser.getToken,
-                            tokenExpDate: new Date(localUser.tokenExpDate)
-                        }
-                    ))
-                }
-                return { type: 'NOTHING' };
-            }
+            )
         )
+
     )
 
-
-    @Effect()
-    authLogin$ = this.actions$.pipe(
-        ofType(AuthActions.LOGIN_START),
-        switchMap((authData: AuthActions.LoginStart) => {
-            return this.http.post<loginResponse>(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAHoqTAcgSwOhAXHIR38SRXvgBziKDYCV8', {
-                email: authData.payload.email,
-                password: authData.payload.password,
-                returnSecureToken: true
-            }
-            ).pipe(
-                map(resData => {
-                    return AuthUser(
-                        +resData.expiresIn,
-                        resData.email,
-                        resData.localId,
-                        resData.idToken);
+    authLogin$ = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(AuthActions.LoginStart),
+                switchMap((authData) => {
+                    return this.reqService.loginReq(
+                        authData.payload.email,
+                        authData.payload.password,
+                        true)
+                        .pipe(
+                            map(resData => {
+                                return AuthUser(
+                                    +resData.expiresIn,
+                                    resData.email,
+                                    resData.localId,
+                                    resData.idToken);
+                            }),
+                            catchError(err => {
+                                return errorHandling(err);
+                            }))
                 }),
-                catchError(err => {
-                    return errorHandling(err);
-                }))
-        }),
-    );
+            )
+    )
 
-    @Effect({ dispatch: false })
-    authSuccess = this.actions$.pipe(ofType(AuthActions.AUTH_SUCCESS), tap(() => {
-        this.router.navigate(['/all-fighters']);
-    }));
+    authSuccess = createEffect(
+        () =>
+            this.actions$.pipe(ofType(AuthActions.AUTH_SUCCESS), tap(() => {
+                this.router.navigate(['/all-fighters']);
+            })), { dispatch: false }
+    )
 
-    @Effect()
-    authSignup = this.actions$.pipe(
-        ofType(AuthActions.SINGUP_START),
-        switchMap((signupAction: AuthActions.SignupStart) => {
-            return this.http.post<singupResponse>(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAHoqTAcgSwOhAXHIR38SRXvgBziKDYCV8', {
-                email: signupAction.payload.email,
-                password: signupAction.payload.password,
-                returnSecureToken: true
-            }
-            ).pipe(map((resData) => {
-                return AuthUser(
-                    +resData.expiresIn,
-                    resData.email,
-                    resData.localId,
-                    resData.idToken
-                )
-            }),
-                catchError((err) => {
-                    return errorHandling(err);
+    authSignup = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(AuthActions.SignupStart),
+                switchMap((signupAction) => {
+                    return this.reqService.signupReq(
+                        signupAction.payload.email,
+                        signupAction.payload.password,
+                        true)
+                        .pipe(map((resData) => {
+                            return AuthUser(
+                                +resData.expiresIn,
+                                resData.email,
+                                resData.localId,
+                                resData.idToken
+                            )
+                        }),
+                            catchError((err) => {
+                                console.error(err);
+                                return errorHandling(err);
+                            })
+                        )
                 })
             )
-        })
     )
 
     constructor(
         private actions$: Actions,
-        private http: HttpClient,
         private router: Router,
-        private activeRoute: ActivatedRoute
+        private reqService: requestService
     ) {
 
     }

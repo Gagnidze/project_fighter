@@ -7,7 +7,7 @@ import { SaveFighters } from '../all-fighters/store/fighters.actions';
 import * as fightersActions from '../all-fighters/store/fighters.actions'
 import { Fighter } from '../shared/models/fighter.model';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,11 +34,11 @@ export class AddFighterComponent implements OnInit, OnDestroy {
   constructor(
     private formDataService: FormDataService,
     private store: Store<mainStore.AppState>,
-    private router: Router
+    // private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.store.dispatch(new fightersActions.GetFighters());
+    this.store.dispatch(fightersActions.GetFighters());
 
     this.fighterForm = new FormGroup({
       'basicData': new FormGroup({
@@ -100,11 +100,17 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
   submit() {
     console.log(this.userMail);
-    this.store.dispatch(new fightersActions.AddFighters(this.fighterForm.value, this.userMail));
+    this.store.dispatch(fightersActions.AddFighters({
+      payload: {
+        payload: this.fighterForm.value,
+        userMail: this.userMail
+      }
+    }));
 
-    this.store.dispatch(new SaveFighters);
+    this.store.dispatch(SaveFighters());
 
     this.fighterForm.reset();
+    // Check if this is needed
     // this.router.navigate(['all-fighters']);
   }
 
@@ -114,10 +120,16 @@ export class AddFighterComponent implements OnInit, OnDestroy {
         this.editId = res.editId
       }
     )
-    this.store.dispatch(new fightersActions.EditFighters(this.editId, this.fighterForm.value));
-    this.store.dispatch(new fightersActions.SaveFighters());
-    this.store.dispatch(new fightersActions.EndEdit());
+    this.store.dispatch(fightersActions.EditFighters({
+      payload: {
+        index: this.editId,
+        updatedFighter: this.fighterForm.value
+      }
+    }));
+    this.store.dispatch(fightersActions.SaveFighters());
+    this.store.dispatch(fightersActions.EndEdit());
     this.fighterForm.reset();
+    // Check if this is needed
     // this.router.navigate(['all-fighters']);
   }
 

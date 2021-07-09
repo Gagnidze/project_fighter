@@ -1,12 +1,20 @@
-import { Action } from "@ngrx/store";
+import { createAction, props } from "@ngrx/store";
 import { Fighter } from "src/app/shared/models/fighter.model";
 
 export const SET_USERS = '[classification] Set Users'
+export const NAVIGATE = '[classification] Navigate'
 
-export class setUsers implements Action {
-    readonly type = SET_USERS;
-
-    constructor(public payload: Fighter[]) { }
+export interface navigationObject {
+    payload: string,
+    type: string
 }
 
-export type classificationActions = setUsers;
+export const setUsers = createAction(
+    SET_USERS,
+    props<{ payload: Fighter[] }>()
+)
+
+export const navigate = createAction(
+    NAVIGATE,
+    props<{ payload: string }>()
+)
